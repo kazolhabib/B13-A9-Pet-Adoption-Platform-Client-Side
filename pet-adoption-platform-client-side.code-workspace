@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../pet-adoption-platform-server-side"
+		}
+	],
+	"settings": {}
+}

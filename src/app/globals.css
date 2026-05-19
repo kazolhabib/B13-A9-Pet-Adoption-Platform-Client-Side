@@ -1,2 +1,90 @@
 @import "tailwindcss";
 @import "@heroui/styles";
+
+@theme {
+  /* Premium Monochrome / Slate Primary */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  
+  --color-dark-bg: #09090b; /* Very Dark Zinc */
+  --color-dark-surface: #18181b;
+  --color-dark-border: #27272a;
+}
+
+@layer base {
+  :root, [data-theme] {
+    /* Premium Light Mode */
+    --background: #fafafa;
+    --foreground: #18181b;
+    --card: #ffffff;
+    --card-foreground: #18181b;
+    --border: #e4e4e7;
+    
+    --primary: #18181b;
+    --primary-foreground: #ffffff;
+    
+    --primary-50: #f4f4f5;
+    --primary-100: #e4e4e7;
+    --primary-500: #18181b;
+    --primary-600: #27272a;
+    --primary-700: #3f3f46;
+    
+    /* Force HeroUI to use dark slate/black */
+    --heroui-primary: 240 6% 10%; /* HSL for Zinc 900 */
+    --heroui-primary-500: 240 6% 10%;
+  }
+
+  .dark, [data-theme="dark"] {
+    /* Premium Dark Mode */
+    --background: #09090b;
+    --foreground: #fafafa;
+    --card: #18181b;
+    --card-foreground: #fafafa;
+    --border: #27272a;
+    
+    --primary: #fafafa; /* White primary in dark mode */
+    --primary-foreground: #09090b;
+    
+    --primary-50: #27272a;
+    --primary-100: #3f3f46;
+    --primary-500: #fafafa;
+    --primary-600: #f4f4f5;
+    --primary-700: #e4e4e7;
+    
+    /* Force HeroUI to use white/gray in dark mode */
+    --heroui-primary: 0 0% 98%;
+    --heroui-primary-500: 0 0% 98%;
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* Custom Scrollbar for a premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
