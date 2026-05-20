@@ -12,7 +12,8 @@ export function FeaturedPets() {
   useEffect(() => {
     async function fetchPets() {
       try {
-        const response = await fetch("/api/pets");
+        const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:5001";
+        const response = await fetch(`${API_BASE}/api/pets`);
         const data = await response.json();
         if (data.success && data.data) {
           setPets(data.data.slice(0, 6));
