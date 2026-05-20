@@ -153,7 +153,7 @@ export default function AddPetPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Adoption Fee ($)</label>
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Adoption Fee (৳)</label>
                 <input
                   type="number"
                   {...register("adoptionFee")}

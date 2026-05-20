@@ -215,7 +215,7 @@ export default function PetDetailsPage({ params }) {
               </div>
               <div className="flex items-center gap-3">
                 <Info className="w-5 h-5 text-primary" />
-                <span className="font-medium">Adoption Fee: {pet.adoptionFee > 0 ? `$${pet.adoptionFee}` : "Free"}</span>
+                <span className="font-medium">Adoption Fee: {pet.adoptionFee > 0 ? `৳${pet.adoptionFee}` : "Free"}</span>
               </div>
             </div>
 
