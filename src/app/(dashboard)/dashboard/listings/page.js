@@ -133,7 +133,7 @@ export default function MyListingsPage() {
         </div>
         <Link
           href="/dashboard/add-pet"
-          className="inline-flex items-center justify-center px-6 py-2.5 bg-primary text-white font-medium rounded-xl hover:bg-primary-600 transition-colors shadow-sm"
+          className="inline-flex items-center justify-center px-6 py-2.5 bg-primary text-white dark:text-zinc-950 font-medium rounded-xl hover:bg-primary-600 transition-colors shadow-sm"
         >
           Add New Pet
         </Link>
@@ -184,7 +184,7 @@ export default function MyListingsPage() {
           <p className="text-zinc-500 dark:text-zinc-400 mb-6 max-w-sm mx-auto">Get started by creating a pet listing to help them find a loving new home.</p>
           <Link
             href="/dashboard/add-pet"
-            className="inline-flex items-center justify-center px-6 py-2.5 bg-primary text-white font-medium rounded-xl hover:bg-primary-600 transition-colors shadow-sm"
+            className="inline-flex items-center justify-center px-6 py-2.5 bg-primary text-white dark:text-zinc-950 font-medium rounded-xl hover:bg-primary-600 transition-colors shadow-sm"
           >
             Add First Pet
           </Link>
