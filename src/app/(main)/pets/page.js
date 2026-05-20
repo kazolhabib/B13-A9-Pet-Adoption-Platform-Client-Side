@@ -176,7 +176,7 @@ export default function AllPetsPage() {
                     {/* Image container */}
                     <div className="relative aspect-[5/4] overflow-hidden m-3.5 rounded-[2rem] bg-zinc-100 dark:bg-zinc-800/60">
                       <img
-                        src={pet.image}
+                        src={pet.image || pet.imageUrl}
                         alt={pet.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />

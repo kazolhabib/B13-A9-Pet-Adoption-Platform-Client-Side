@@ -6,8 +6,7 @@ import { toast } from "sonner";
 const AuthContext = createContext({});
 
 // Allow overriding the backend URL via `NEXT_PUBLIC_API_BASE`.
-// When not set, use a relative path so client fetches hit the Next.js API routes
-// (avoids cross-origin "Failed to fetch" when a separate backend isn't running).
+// When not set, use a relative path so client fetches hit the Next.js API routes.
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 
 async function parseJSONSafely(response) {
@@ -31,25 +30,32 @@ async function parseJSONSafely(response) {
   return null;
 }
 
+// Normalize backend responses: Express returns {message, user}, mock returns {success, user}
+function isSuccess(response, data) {
+  if (!response.ok) return false;
+  if (data?.success === true) return true;
+  if (data?.success === false) return false;
+  // Fallback: if response.ok and there's a user, treat as success
+  if (data?.user) return true;
+  return response.ok;
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if user is logged in (via HTTPOnly cookie or fallback token verify)
+  // Check if user is logged in (via HTTPOnly cookie)
   useEffect(() => {
     const checkUserSession = async () => {
       try {
         const response = await fetch(`${API_BASE}/api/me`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // Required for HTTPOnly cookies to be sent
+          headers: { "Content-Type": "application/json" },
           credentials: "include",
         });
 
         const data = await parseJSONSafely(response);
-        if (response.ok && data?.success) {
+        if (isSuccess(response, data) && data?.user) {
           setUser(data.user);
         } else {
           setUser(null);
@@ -60,27 +66,23 @@ export function AuthProvider({ children }) {
       } finally {
         setIsLoading(false);
       }
-
     };
 
     checkUserSession();
   }, []);
 
   const login = async (email, password) => {
-
     try {
       const response = await fetch(`${API_BASE}/api/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
         credentials: "include",
       });
 
       const data = await parseJSONSafely(response);
 
-      if (response.ok && data?.success) {
+      if (isSuccess(response, data) && data?.user) {
         setUser(data.user);
         toast.success("Welcome back! Successfully signed in.");
         return { success: true };
@@ -98,16 +100,14 @@ export function AuthProvider({ children }) {
     try {
       const response = await fetch(`${API_BASE}/api/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, photoUrl }),
         credentials: "include",
       });
 
       const data = await parseJSONSafely(response);
 
-      if (response.ok && data?.success) {
+      if (isSuccess(response, data) && data?.user) {
         setUser(data.user);
         toast.success("Account created successfully!");
         return { success: true };
@@ -125,16 +125,14 @@ export function AuthProvider({ children }) {
     try {
       const response = await fetch(`${API_BASE}/api/auth/google`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ credential }),
         credentials: "include",
       });
 
       const data = await parseJSONSafely(response);
 
-      if (response.ok && data?.success) {
+      if (isSuccess(response, data) && data?.user) {
         setUser(data.user);
         toast.success("Welcome! Signed in with Google successfully.");
         return { success: true };
@@ -152,9 +150,7 @@ export function AuthProvider({ children }) {
     try {
       const response = await fetch(`${API_BASE}/api/logout`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
 
@@ -166,7 +162,7 @@ export function AuthProvider({ children }) {
       }
     } catch (error) {
       console.error("Logout error:", error);
-      setUser(null); // Fallback
+      setUser(null);
     }
   };
 

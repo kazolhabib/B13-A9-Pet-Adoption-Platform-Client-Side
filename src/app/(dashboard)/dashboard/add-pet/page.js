@@ -30,6 +30,7 @@ export default function AddPetPage() {
         adoptionFee: Number(data.adoptionFee) || 0,
         location: data.location,
         image: data.imageUrl,
+        imageUrl: data.imageUrl,
         description: data.description,
       };
 
@@ -44,7 +45,7 @@ export default function AddPetPage() {
 
       const resData = await response.json();
 
-      if (response.ok && resData.success) {
+      if (response.ok) {
         toast.success("Pet listed successfully for adoption!");
         reset();
         router.push("/dashboard/listings");
@@ -221,14 +222,14 @@ export default function AddPetPage() {
             <button
               type="button"
               onClick={() => reset()}
-              className="px-6 py-3 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-700 dark:text-zinc-300 font-medium hover:bg-zinc-50 dark:hover:bg-zinc-700/50 transition-colors"
+              className="px-6 py-3 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-700 dark:text-zinc-300 font-medium hover:bg-zinc-50 dark:hover:bg-zinc-700/50 transition-colors cursor-pointer"
             >
               Reset
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-8 py-3 bg-primary text-white font-medium rounded-xl hover:bg-primary-600 transition-colors shadow-sm disabled:opacity-75"
+              className="flex items-center gap-2 px-8 py-3 bg-zinc-900 dark:bg-zinc-800 text-white dark:text-white font-medium rounded-xl hover:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors shadow-sm disabled:opacity-75"
             >
               {isSubmitting ? (
                 <>
@@ -237,7 +238,7 @@ export default function AddPetPage() {
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="w-5 h-5" />
+                  <CheckCircle2 className="w-5 h-5 cursor-pointer" />
                   List Pet for Adoption
                 </>
               )}

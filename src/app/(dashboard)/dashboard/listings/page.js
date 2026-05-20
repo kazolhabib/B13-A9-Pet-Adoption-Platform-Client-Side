@@ -32,11 +32,11 @@ export default function MyListingsPage() {
       });
       const reqData = await reqResponse.json();
 
-      if (listResponse.ok && listData.success) {
-        setListings(listData.data);
+      if (listResponse.ok) {
+        setListings(listData.data || listData || []);
       }
-      if (reqResponse.ok && reqData.success) {
-        setReceivedRequests(reqData.data);
+      if (reqResponse.ok) {
+        setReceivedRequests(reqData.data || reqData || []);
       }
     } catch (error) {
       toast.error("Failed to load listings from server.");
@@ -68,7 +68,7 @@ export default function MyListingsPage() {
         credentials: "include",
       });
       const data = await response.json();
-      if (response.ok && data.success) {
+      if (response.ok && (data.success !== false)) {
         toast.success(`${selectedPet.name} has been removed from your listings.`);
         setListings(listings.filter(l => l._id !== selectedPet._id));
       } else {
@@ -97,7 +97,7 @@ export default function MyListingsPage() {
       });
       const data = await response.json();
 
-      if (response.ok && data.success) {
+      if (response.ok && (data.success !== false)) {
         toast.success(data.message || `Request successfully ${action}ed!`);
         // Refresh all listings and requests to update statuses
         await fetchListingsAndRequests();
@@ -209,7 +209,7 @@ export default function MyListingsPage() {
                   className="bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden flex flex-col group"
                 >
                   <div className="h-48 relative overflow-hidden bg-zinc-100 dark:bg-zinc-700">
-                    <img src={pet.image} alt={pet.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <img src={pet.image || pet.imageUrl} alt={pet.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     <div className="absolute top-3 right-3 flex gap-2">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm backdrop-blur-sm ${pet.status === 'available' ? 'bg-green-500/90 text-white' : 'bg-zinc-500/90 text-white'}`}>
                         {petStatusCap}

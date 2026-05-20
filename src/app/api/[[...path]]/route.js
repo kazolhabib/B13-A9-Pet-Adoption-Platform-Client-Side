@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { promises as fs } from "fs";
+import path from "path";
 
 const COOKIE_NAME = "pet_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+const DB_FILE = path.join(process.cwd(), ".data", "db.json");
 
 const DEFAULT_USERS = [
   {
@@ -185,16 +188,51 @@ const DEFAULT_PETS = [
   },
 ];
 
-function getDb() {
-  if (!globalThis.__PET_ADOPTION_DB) {
-    globalThis.__PET_ADOPTION_DB = {
+let dbCache = null;
+let dbCacheTime = 0;
+const DB_CACHE_TTL = 5000; // Cache DB for 5 seconds to avoid excessive file I/O
+
+async function loadDbFromFile() {
+  try {
+    const data = await fs.readFile(DB_FILE, "utf-8");
+    return JSON.parse(data);
+  } catch (error) {
+    // If file doesn't exist, return default DB
+    return {
       users: [...DEFAULT_USERS],
       pets: [...DEFAULT_PETS],
       requests: [],
       sessions: {},
     };
   }
-  return globalThis.__PET_ADOPTION_DB;
+}
+
+async function saveDbToFile(db) {
+  try {
+    const dir = path.dirname(DB_FILE);
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(DB_FILE, JSON.stringify(db, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Failed to save database to file:", error);
+  }
+}
+
+async function getDb() {
+  const now = Date.now();
+  if (dbCache && (now - dbCacheTime) < DB_CACHE_TTL) {
+    return dbCache;
+  }
+
+  dbCache = await loadDbFromFile();
+  dbCacheTime = now;
+  return dbCache;
+}
+
+// Helper to ensure DB is saved after modifications
+async function saveDb(db) {
+  dbCache = db;
+  dbCacheTime = Date.now();
+  await saveDbToFile(db);
 }
 
 function sanitizeUser(user) {
@@ -208,18 +246,21 @@ function getSessionId(request) {
 }
 
 function getCurrentUser(request) {
-  const db = getDb();
   const sessionId = getSessionId(request);
   if (!sessionId) return null;
-  const session = db.sessions[sessionId];
+  const session = sessionsInMemory[sessionId];
   if (!session) return null;
-  return db.users.find((user) => user._id === session.userId) || null;
+  // Note: Database lookup is synchronous here, we'll handle it properly in async handlers
+  const dbSync = dbCache; // Use cached db for sync operations
+  if (!dbSync) return null;
+  return dbSync.users.find((user) => user._id === session.userId) || null;
 }
 
+let sessionsInMemory = {}; // Sessions stored in memory (don't need persistence)
+
 function createSession(userId) {
-  const db = getDb();
   const sessionId = `session_${crypto.randomUUID()}`;
-  db.sessions[sessionId] = {
+  sessionsInMemory[sessionId] = {
     userId,
     createdAt: new Date().toISOString(),
   };
@@ -246,13 +287,12 @@ function badRequest(message = "Invalid request") {
   return createJsonResponse({ success: false, message }, 400);
 }
 
-function formatRequest(request) {
-  const db = getDb();
+function formatRequest(request, db) {
   const pet = db.pets.find((item) => item._id === request.petId);
   return {
     ...request,
     petName: pet?.name || "Unknown",
-    petImage: pet?.image || "",
+    petImage: pet?.image || pet?.imageUrl || "",
   };
 }
 
@@ -288,7 +328,7 @@ function sortPets(pets, sort) {
 }
 
 async function getHandler(request, { params }) {
-  const db = getDb();
+  const db = await getDb();
   const { path } = await params;
   const currentUser = getCurrentUser(request);
   const [resource, resourceId, action] = path || [];
@@ -331,7 +371,7 @@ async function getHandler(request, { params }) {
       if (!currentUser) return unauthorized();
       const requests = db.requests
         .filter((req) => req.requesterEmail === currentUser.email)
-        .map(formatRequest);
+        .map((req) => formatRequest(req, db));
       return createJsonResponse({ success: true, data: requests });
     }
 
@@ -342,7 +382,7 @@ async function getHandler(request, { params }) {
           const pet = db.pets.find((item) => item._id === req.petId);
           return pet?.ownerEmail === currentUser.email;
         })
-        .map(formatRequest);
+        .map((req) => formatRequest(req, db));
       return createJsonResponse({ success: true, data: requests });
     }
 
@@ -353,7 +393,7 @@ async function getHandler(request, { params }) {
 }
 
 async function postHandler(request, { params }) {
-  const db = getDb();
+  const db = await getDb();
   const { path } = await params;
   const currentUser = getCurrentUser(request);
   const [resource, subResource] = path || [];
@@ -404,6 +444,7 @@ async function postHandler(request, { params }) {
       password,
     };
     db.users.push(newUser);
+    await saveDb(db);
     const sessionId = createSession(newUser._id);
     return createJsonResponse(
       { success: true, user: sanitizeUser(newUser) },
@@ -433,6 +474,7 @@ async function postHandler(request, { params }) {
         password: "google-mock",
       };
       db.users.push(user);
+      await saveDb(db);
     }
     const sessionId = createSession(user._id);
     return createJsonResponse(
@@ -451,7 +493,7 @@ async function postHandler(request, { params }) {
   if (resource === "logout") {
     const sessionId = getSessionId(request);
     if (sessionId) {
-      delete db.sessions[sessionId];
+      delete sessionsInMemory[sessionId];
     }
     return createJsonResponse(
       { success: true, message: "Logged out" },
@@ -492,6 +534,7 @@ async function postHandler(request, { params }) {
       createdAt: new Date().toISOString(),
     };
     db.pets.push(newPet);
+    await saveDb(db);
     return createJsonResponse({ success: true, data: newPet }, 201);
   }
 
@@ -520,6 +563,7 @@ async function postHandler(request, { params }) {
       createdAt: new Date().toISOString(),
     };
     db.requests.push(newRequest);
+    await saveDb(db);
     return createJsonResponse({ success: true, data: newRequest }, 201);
   }
 
@@ -527,7 +571,7 @@ async function postHandler(request, { params }) {
 }
 
 async function deleteHandler(request, { params }) {
-  const db = getDb();
+  const db = await getDb();
   const { path } = await params;
   const currentUser = getCurrentUser(request);
   const [resource, resourceId] = path || [];
@@ -542,6 +586,7 @@ async function deleteHandler(request, { params }) {
     }
     db.pets.splice(petIndex, 1);
     db.requests = db.requests.filter((req) => req.petId !== resourceId);
+    await saveDb(db);
     return createJsonResponse({ success: true, message: "Pet listing deleted." });
   }
 
@@ -549,7 +594,7 @@ async function deleteHandler(request, { params }) {
 }
 
 async function patchHandler(request, { params }) {
-  const db = getDb();
+  const db = await getDb();
   const { path } = await params;
   const currentUser = getCurrentUser(request);
   const [resource, requestId, action] = path || [];
@@ -573,11 +618,13 @@ async function patchHandler(request, { params }) {
           req.status = "rejected";
         }
       });
+      await saveDb(db);
       return createJsonResponse({ success: true, message: "Request approved successfully." });
     }
 
     if (action === "reject") {
       requestRecord.status = "rejected";
+      await saveDb(db);
       return createJsonResponse({ success: true, message: "Request rejected." });
     }
 

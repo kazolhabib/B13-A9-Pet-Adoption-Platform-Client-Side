@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Eye, XCircle, CheckCircle, Clock, Loader2 } from "lucide-react";
+import { Eye, XCircle, CheckCircle, Clock, Loader2, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
@@ -10,6 +11,7 @@ export default function MyRequestsPage() {
   const { API_BASE } = useAuth();
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(null);
 
   const fetchMyRequests = async () => {
     try {
@@ -18,8 +20,8 @@ export default function MyRequestsPage() {
         credentials: "include",
       });
       const data = await response.json();
-      if (response.ok && data.success) {
-        setRequests(data.data);
+      if (response.ok) {
+        setRequests(data.data || data || []);
       } else {
         toast.error(data.message || "Failed to load requests.");
       }
@@ -34,6 +36,31 @@ export default function MyRequestsPage() {
   useEffect(() => {
     fetchMyRequests();
   }, []);
+
+  const handleDeleteRequest = async (requestId) => {
+    if (!confirm("Are you sure you want to cancel this adoption request?")) return;
+    
+    setIsDeleting(requestId);
+    try {
+      const response = await fetch(`${API_BASE}/api/requests/${requestId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await response.json();
+      
+      if (response.ok && data.success !== false) {
+        toast.success(data.message || "Request cancelled successfully.");
+        setRequests(requests.filter((r) => r._id !== requestId));
+      } else {
+        toast.error(data.message || "Failed to cancel request.");
+      }
+    } catch (error) {
+      toast.error("Network error cancelling request.");
+      console.error(error);
+    } finally {
+      setIsDeleting(null);
+    }
+  };
 
   const getStatusBadge = (status) => {
     const statusLower = status.toLowerCase();
@@ -116,18 +143,24 @@ export default function MyRequestsPage() {
                     </td>
                     <td className="py-4 px-6">{getStatusBadge(request.status)}</td>
                     <td className="py-4 px-6 flex justify-end gap-3">
-                      <button 
-                        onClick={() => {
-                          if (request.notes) {
-                            toast.info(`Your notes: "${request.notes}"`);
-                          } else {
-                            toast.info("No additional notes provided.");
-                          }
-                        }}
+                      <Link 
+                        href={`/pets/${request.petId}`}
                         className="p-2 rounded-lg text-zinc-500 hover:text-primary hover:bg-primary/10 transition-colors"
-                        title="View Details"
+                        title="View Pet Details"
                       >
                         <Eye className="w-5 h-5" />
+                      </Link>
+                      <button 
+                        onClick={() => handleDeleteRequest(request._id)}
+                        disabled={isDeleting === request._id}
+                        className="p-2 rounded-lg text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+                        title="Cancel Request"
+                      >
+                        {isDeleting === request._id ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-5 h-5" />
+                        )}
                       </button>
                     </td>
                   </motion.tr>

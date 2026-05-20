@@ -162,7 +162,7 @@ export function Navbar() {
               ) : (
                 <Link
                   href="/login"
-                  className="px-5 py-2 rounded-full bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm hover:shadow-md"
+                  className="px-5 py-2 rounded-full bg-primary text-white dark:text-zinc-950 text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm hover:shadow-md"
                 >
                   Login
                 </Link>
@@ -225,7 +225,7 @@ export function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setIsMenuOpen(false)}
-                  className="px-4 py-3 rounded-xl text-base font-medium bg-primary text-white text-center shadow-sm"
+                  className="px-4 py-3 rounded-xl text-base font-medium bg-primary text-white dark:text-zinc-950 text-center shadow-sm"
                 >
                   Login
                 </Link>

@@ -29,8 +29,8 @@ export default function PetDetailsPage({ params }) {
         setIsLoading(true);
         const response = await fetch(`${API_BASE}/api/pets/${resolvedParams.id}`);
         const data = await response.json();
-        if (response.ok && data.success) {
-          setPet(data.data);
+        if (response.ok && (data.success || data)) {
+          setPet(data.data || data);
         } else {
           toast.error(data.message || "Failed to load companion details.");
         }
@@ -70,15 +70,20 @@ export default function PetDetailsPage({ params }) {
         },
         body: JSON.stringify({
           petId: pet._id,
+          petName: pet.name,
+          requesterName: user?.name || "",
+          requesterEmail: user?.email || "",
+          ownerEmail: pet.ownerEmail,
           phone,
           address,
           notes,
+          pickupDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         }),
         credentials: "include",
       });
 
       const data = await response.json();
-      if (response.ok && data.success) {
+      if (response.ok && (data.success !== false)) {
         toast.success(`Adoption request successfully submitted for ${pet.name}!`);
         setIsModalOpen(false);
         setPhone("");
@@ -150,7 +155,7 @@ export default function PetDetailsPage({ params }) {
           >
             <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl border-8 border-white dark:border-zinc-800">
               <img 
-                src={pet.image} 
+                src={pet.image || pet.imageUrl} 
                 alt={pet.name} 
                 className="w-full h-full object-cover"
               />
