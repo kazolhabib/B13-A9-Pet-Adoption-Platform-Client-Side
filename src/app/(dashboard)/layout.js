@@ -1,14 +1,15 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
-import { Navbar } from "@/components/Navbar";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 export default function DashboardLayout({ children }) {
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -20,8 +21,15 @@ export default function DashboardLayout({ children }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-zinc-500 dark:text-zinc-400 font-medium animate-pulse">Verifying session...</p>
+          <div className="relative">
+            <div className="w-14 h-14 border-4 border-zinc-200 dark:border-zinc-700 border-t-emerald-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full bg-emerald-500/20 animate-pulse"></div>
+            </div>
+          </div>
+          <p className="text-zinc-500 dark:text-zinc-400 font-medium text-sm">
+            Verifying session...
+          </p>
         </div>
       </div>
     );
@@ -32,12 +40,23 @@ export default function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--background)]">
-      <Navbar />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50/50 dark:bg-gray-900/50">
-          {children}
+    <div className="flex h-screen bg-zinc-100 dark:bg-zinc-950 overflow-hidden">
+      {/* Sidebar */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Dashboard Header */}
+        <DashboardHeader onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-4 md:p-8">
+            {children}
+          </div>
         </main>
       </div>
     </div>
