@@ -27,7 +27,7 @@ export function PetCareTips() {
               <img 
                 src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                 alt="Beautiful golden retriever dog" 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-[75%_center]"
               />
             </div>
           </motion.div>
