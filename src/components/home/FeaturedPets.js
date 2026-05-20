@@ -15,7 +15,7 @@ export function FeaturedPets() {
         const response = await fetch("/api/pets");
         const data = await response.json();
         if (data.success && data.data) {
-          setPets(data.data);
+          setPets(data.data.slice(0, 6));
         }
       } catch (error) {
         console.error("Error fetching pets:", error);
@@ -62,7 +62,7 @@ export function FeaturedPets() {
             <div className="text-zinc-600 dark:text-zinc-400">Loading featured pets...</div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {pets.map((pet, index) => {
               const { tag, color } = getTagColor(index);
               return (
