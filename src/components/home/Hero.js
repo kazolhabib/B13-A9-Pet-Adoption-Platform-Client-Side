@@ -75,7 +75,7 @@ export function Hero() {
               className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white/80 dark:border-zinc-800/80 backdrop-blur-sm grayscale-[20%]"
             >
               <img
-                src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
                 alt="Cute cat looking at camera"
                 className="w-full h-full object-cover"
               />

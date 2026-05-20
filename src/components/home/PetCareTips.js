@@ -25,8 +25,8 @@ export function PetCareTips() {
           >
             <div className="relative aspect-square md:aspect-[4/3] lg:aspect-square rounded-[3rem] overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="Person petting dog" 
+                src="https://images.unsplash.com/photo-1537151608804-ea6d15a128e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                alt="Beautiful golden retriever dog" 
                 className="w-full h-full object-cover"
               />
             </div>
