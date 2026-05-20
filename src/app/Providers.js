@@ -2,6 +2,11 @@
 
 import { Toaster } from "sonner";
 import { useEffect, useState } from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+import { AuthProvider } from "@/context/AuthContext";
+
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 
 export function Providers({ children }) {
   const [mounted, setMounted] = useState(false);
@@ -19,9 +24,11 @@ export function Providers({ children }) {
   if (!mounted) return <>{children}</>;
 
   return (
-    <>
-      <Toaster position="top-center" richColors />
-      {children}
-    </>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <AuthProvider>
+        <Toaster position="top-center" richColors />
+        {children}
+      </AuthProvider>
+    </GoogleOAuthProvider>
   );
 }

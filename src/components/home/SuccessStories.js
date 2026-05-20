@@ -14,7 +14,7 @@ export function SuccessStories() {
     {
       id: 2,
       name: "Sarah & Whiskers",
-      image: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      image: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=600&q=80",
       quote: "I was looking for a quiet companion, and Whiskers is exactly that. Adopting her was the best decision I've made this year.",
     },
   ];

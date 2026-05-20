@@ -2,18 +2,20 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { PawPrint, Sun, Moon, Menu, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
 
 export function Navbar() {
   const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
-  // Mock auth state for UI
-  const isAuthenticated = true;
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     if (document.documentElement.classList.contains("dark")) {
@@ -34,12 +36,25 @@ export function Navbar() {
     }
   };
 
+  const handleLogout = async () => {
+    await logout();
+    setIsProfileOpen(false);
+    setIsMenuOpen(false);
+    router.push("/");
+  };
+
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "All Pets", href: "/pets" },
-    { name: "My Requests", href: "/dashboard/requests" },
-    { name: "Add Pet", href: "/dashboard/add-pet" },
   ];
+
+  // Only show private dashboard links if logged in
+  if (isAuthenticated) {
+    navLinks.push(
+      { name: "My Requests", href: "/dashboard/requests" },
+      { name: "Add Pet", href: "/dashboard/add-pet" }
+    );
+  }
 
   return (
     <nav className="sticky top-0 z-50 w-full backdrop-blur-lg bg-white/70 dark:bg-zinc-900/70 border-b border-gray-200 dark:border-zinc-800 transition-colors duration-300">
@@ -98,10 +113,14 @@ export function Navbar() {
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center gap-2 p-1 pr-3 rounded-full border border-zinc-200 dark:border-zinc-700 hover:border-primary transition-colors"
                   >
-                    <div className="bg-primary/10 p-1.5 rounded-full text-primary">
-                      <User className="w-4 h-4" />
-                    </div>
-                    <span className="text-sm font-medium">Profile</span>
+                    {user.photoUrl ? (
+                      <img src={user.photoUrl} alt={user.name} className="w-7 h-7 rounded-full object-cover" />
+                    ) : (
+                      <div className="bg-primary/10 p-1.5 rounded-full text-primary">
+                        <User className="w-4 h-4" />
+                      </div>
+                    )}
+                    <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{user.name.split(" ")[0]}</span>
                   </button>
 
                   <AnimatePresence>
@@ -115,7 +134,7 @@ export function Navbar() {
                       >
                         <div className="p-2 flex flex-col">
                           <Link
-                            href="/dashboard"
+                            href="/dashboard/listings"
                             className="px-4 py-2 text-sm text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg transition-colors"
                             onClick={() => setIsProfileOpen(false)}
                           >
@@ -130,8 +149,8 @@ export function Navbar() {
                           </Link>
                           <div className="h-px bg-zinc-100 dark:bg-zinc-700 my-1" />
                           <button
-                            className="px-4 py-2 text-sm text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors"
-                            onClick={() => setIsProfileOpen(false)}
+                            className="px-4 py-2 text-sm text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors font-medium"
+                            onClick={handleLogout}
                           >
                             Logout
                           </button>
@@ -189,14 +208,14 @@ export function Navbar() {
               {isAuthenticated ? (
                 <>
                   <Link
-                    href="/dashboard"
+                    href="/dashboard/listings"
                     onClick={() => setIsMenuOpen(false)}
                     className="px-4 py-3 rounded-xl text-base font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
                   >
                     Dashboard
                   </Link>
                   <button
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={handleLogout}
                     className="px-4 py-3 text-left rounded-xl text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
                   >
                     Logout

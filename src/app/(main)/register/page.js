@@ -1,21 +1,32 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { PawPrint, Mail, Lock, User, UserPlus } from "lucide-react";
+import { PawPrint, Mail, Lock, User, UserPlus, Image } from "lucide-react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { useAuth } from "@/context/AuthContext";
 
 export default function RegisterPage() {
+  const { register: registerAuth } = useAuth();
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   
-  const onSubmit = (data) => {
-    toast.success("Account created successfully!");
-    // In a real app, you would redirect to login or dashboard
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    const res = await registerAuth(data.name, data.email, data.password, data.photoUrl || "");
+    setIsSubmitting(false);
+    if (res.success) {
+      router.push("/pets");
+    }
   };
 
   const handleGoogleLogin = () => {
-    toast.success("Redirecting to Google Sign Up...");
+    toast.info("Google Sign Up is a mockup for this assignment.");
   };
 
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -86,6 +97,23 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+              Photo URL (Optional)
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+                <Image className="h-5 w-5" />
+              </div>
+              <input
+                type="text"
+                {...register("photoUrl")}
+                className="block w-full pl-10 pr-3 py-3 border border-zinc-200 dark:border-zinc-600 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-zinc-400"
+                placeholder="https://example.com/avatar.jpg"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
               Password
             </label>
             <div className="relative">
@@ -132,10 +160,17 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-primary hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all mt-6"
+            disabled={isSubmitting}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-primary hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all mt-6 disabled:opacity-75"
           >
-            <UserPlus className="w-5 h-5" />
-            Sign Up
+            {isSubmitting ? (
+              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            ) : (
+              <>
+                <UserPlus className="w-5 h-5" />
+                Sign Up
+              </>
+            )}
           </button>
         </form>
 

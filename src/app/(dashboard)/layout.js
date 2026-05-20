@@ -1,10 +1,38 @@
+"use client";
+
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Navbar } from "@/components/Navbar";
 
 export default function DashboardLayout({ children }) {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-zinc-500 dark:text-zinc-400 font-medium animate-pulse">Verifying session...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-[var(--background)]">
-      {/* We can reuse the Navbar for the dashboard but maybe standard Dashboard has its own app bar? Let's keep the main Navbar but modify sidebar to be under it, or make it a full sidebar. */}
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />

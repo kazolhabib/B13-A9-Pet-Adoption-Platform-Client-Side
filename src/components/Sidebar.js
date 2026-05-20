@@ -1,18 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { LayoutDashboard, PlusCircle, List, LogOut, Settings } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuth();
 
   const menuItems = [
     { name: "My Requests", href: "/dashboard/requests", icon: LayoutDashboard },
     { name: "Add Pet", href: "/dashboard/add-pet", icon: PlusCircle },
     { name: "My Listings", href: "/dashboard/listings", icon: List },
   ];
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
 
   return (
     <aside className="w-64 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex-shrink-0 hidden md:flex flex-col">
@@ -52,14 +60,8 @@ export function Sidebar() {
 
       <div className="mt-auto p-6 border-t border-zinc-200 dark:border-zinc-800">
         <nav className="space-y-1.5">
-          <Link
-            href="/dashboard/settings"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
-          >
-            <Settings className="w-5 h-5 text-zinc-400" />
-            Settings
-          </Link>
           <button
+            onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             <LogOut className="w-5 h-5" />

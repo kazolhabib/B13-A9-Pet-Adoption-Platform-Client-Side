@@ -1,19 +1,62 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { UploadCloud, CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AddPetPage() {
+  const { user, API_BASE } = useAuth();
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   
-  // Mock current user email
-  const userEmail = "john.doe@example.com";
+  const userEmail = user?.email || "";
 
-  const onSubmit = (data) => {
-    console.log(data);
-    toast.success("Pet listed successfully for adoption!");
-    reset();
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      // Map form imageUrl to backend schema field 'image'
+      const petPayload = {
+        name: data.name,
+        species: data.species,
+        breed: data.breed,
+        age: data.age,
+        gender: data.gender,
+        healthStatus: data.healthStatus,
+        vaccinationStatus: data.vaccinationStatus || "Fully Vaccinated",
+        adoptionFee: Number(data.adoptionFee) || 0,
+        location: data.location,
+        image: data.imageUrl,
+        description: data.description,
+      };
+
+      const response = await fetch(`${API_BASE}/api/pets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(petPayload),
+        credentials: "include",
+      });
+
+      const resData = await response.json();
+
+      if (response.ok && resData.success) {
+        toast.success("Pet listed successfully for adoption!");
+        reset();
+        router.push("/dashboard/listings");
+      } else {
+        toast.error(resData.message || "Failed to submit pet listing.");
+      }
+    } catch (error) {
+      toast.error("Network error listing pet.");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -169,7 +212,7 @@ export default function AddPetPage() {
                 type="email"
                 readOnly
                 value={userEmail}
-                className="block w-full px-4 py-3 bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-500 dark:text-zinc-400 cursor-not-allowed"
+                className="block w-full px-4 py-3 bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-500 dark:text-zinc-400 cursor-not-allowed font-medium"
               />
             </div>
           </div>
@@ -184,10 +227,20 @@ export default function AddPetPage() {
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-8 py-3 bg-primary text-white font-medium rounded-xl hover:bg-primary-600 transition-colors shadow-sm"
+              disabled={isSubmitting}
+              className="flex items-center gap-2 px-8 py-3 bg-primary text-white font-medium rounded-xl hover:bg-primary-600 transition-colors shadow-sm disabled:opacity-75"
             >
-              <CheckCircle2 className="w-5 h-5" />
-              List Pet for Adoption
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Listing...
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-5 h-5" />
+                  List Pet for Adoption
+                </>
+              )}
             </button>
           </div>
         </form>

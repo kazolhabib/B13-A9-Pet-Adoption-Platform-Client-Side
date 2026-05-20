@@ -1,27 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Edit2, Eye, Trash2, Users, AlertCircle, X, CheckCircle, Heart } from "lucide-react";
+import { Edit2, Eye, Trash2, Users, AlertCircle, X, CheckCircle, Heart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
-
-const MOCK_LISTINGS = [
-  { id: 1, name: "Bella", species: "Dog", breed: "Golden Retriever", status: "Available", image: "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", requests: 3 },
-  { id: 2, name: "Luna", species: "Cat", breed: "Persian", status: "Adopted", image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", requests: 0 },
-  { id: 3, name: "Max", species: "Dog", breed: "German Shepherd", status: "Available", image: "https://images.unsplash.com/photo-1589965716319-4a041b58fa8a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", requests: 1 },
-];
+import { useAuth } from "@/context/AuthContext";
 
 export default function MyListingsPage() {
-  const [listings, setListings] = useState(MOCK_LISTINGS);
+  const { API_BASE } = useAuth();
+  const [listings, setListings] = useState([]);
+  const [receivedRequests, setReceivedRequests] = useState([]);
+  const [isLoadingListings, setIsLoadingListings] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isRequestsModalOpen, setIsRequestsModalOpen] = useState(false);
   const [selectedPet, setSelectedPet] = useState(null);
+  const [actionLoading, setActionLoading] = useState(null); // stores request ID currently being accepted/rejected
+
+  const fetchListingsAndRequests = async () => {
+    try {
+      setIsLoadingListings(true);
+      // Fetch listings
+      const listResponse = await fetch(`${API_BASE}/api/pets/my-listings`, {
+        credentials: "include",
+      });
+      const listData = await listResponse.json();
+
+      // Fetch received requests
+      const reqResponse = await fetch(`${API_BASE}/api/requests/received`, {
+        credentials: "include",
+      });
+      const reqData = await reqResponse.json();
+
+      if (listResponse.ok && listData.success) {
+        setListings(listData.data);
+      }
+      if (reqResponse.ok && reqData.success) {
+        setReceivedRequests(reqData.data);
+      }
+    } catch (error) {
+      toast.error("Failed to load listings from server.");
+      console.error(error);
+    } finally {
+      setIsLoadingListings(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchListingsAndRequests();
+  }, []);
 
   const stats = {
     total: listings.length,
-    available: listings.filter(l => l.status === "Available").length,
-    adopted: listings.filter(l => l.status === "Adopted").length,
+    available: listings.filter(l => l.status === "available").length,
+    adopted: listings.filter(l => l.status === "adopted").length,
   };
 
   const openDeleteModal = (pet) => {
@@ -29,17 +61,68 @@ export default function MyListingsPage() {
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    setListings(listings.filter(l => l.id !== selectedPet.id));
-    toast.success(`${selectedPet.name} has been removed from your listings.`);
-    setIsDeleteModalOpen(false);
-    setSelectedPet(null);
+  const confirmDelete = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/pets/${selectedPet._id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        toast.success(`${selectedPet.name} has been removed from your listings.`);
+        setListings(listings.filter(l => l._id !== selectedPet._id));
+      } else {
+        toast.error(data.message || "Failed to delete listing.");
+      }
+    } catch (error) {
+      toast.error("Network error deleting listing.");
+      console.error(error);
+    } finally {
+      setIsDeleteModalOpen(false);
+      setSelectedPet(null);
+    }
   };
 
   const openRequestsModal = (pet) => {
     setSelectedPet(pet);
     setIsRequestsModalOpen(true);
   };
+
+  const handleRequestAction = async (requestId, action) => {
+    setActionLoading(requestId);
+    try {
+      const response = await fetch(`${API_BASE}/api/requests/${requestId}/${action}`, {
+        method: "PATCH",
+        credentials: "include",
+      });
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success(data.message || `Request successfully ${action}ed!`);
+        // Refresh all listings and requests to update statuses
+        await fetchListingsAndRequests();
+        
+        // If it was approved, close the requests modal as other requests are now auto-rejected and pet is adopted
+        if (action === "approve") {
+          setIsRequestsModalOpen(false);
+        }
+      } else {
+        toast.error(data.message || `Failed to ${action} request.`);
+      }
+    } catch (error) {
+      toast.error(`Network error performing ${action} action.`);
+      console.error(error);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  // Filter requests corresponding to the selected pet
+  // petId can be either a string ObjectId or a populated object, so normalize with toString()
+  const activeRequests = receivedRequests.filter(req => {
+    const reqPetId = typeof req.petId === "object" && req.petId !== null ? req.petId._id : req.petId;
+    return String(reqPetId) === String(selectedPet?._id);
+  });
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -87,70 +170,101 @@ export default function MyListingsPage() {
         </div>
       </div>
 
-      {/* Listings Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <AnimatePresence>
-          {listings.map(pet => (
-            <motion.div
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              key={pet.id}
-              className="bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden flex flex-col group"
-            >
-              <div className="h-48 relative overflow-hidden">
-                <img src={pet.image} alt={pet.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute top-3 right-3 flex gap-2">
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm backdrop-blur-sm ${pet.status === 'Available' ? 'bg-green-500/90 text-white' : 'bg-zinc-500/90 text-white'}`}>
-                    {pet.status}
-                  </span>
-                </div>
-              </div>
-              <div className="p-5 flex-1 flex flex-col">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{pet.name}</h3>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">{pet.species} • {pet.breed}</p>
+      {isLoadingListings ? (
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
+          <Loader2 className="w-10 h-10 animate-spin text-primary" />
+          <p className="text-zinc-500 dark:text-zinc-400">Loading listings...</p>
+        </div>
+      ) : listings.length === 0 ? (
+        <div className="text-center py-16 bg-white dark:bg-zinc-800 rounded-3xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
+          <div className="w-16 h-16 bg-zinc-100 dark:bg-zinc-700/50 rounded-full flex items-center justify-center text-zinc-400 dark:text-zinc-500 mx-auto mb-4">
+            <Heart className="w-8 h-8" />
+          </div>
+          <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">No listed pets yet</h3>
+          <p className="text-zinc-500 dark:text-zinc-400 mb-6 max-w-sm mx-auto">Get started by creating a pet listing to help them find a loving new home.</p>
+          <Link
+            href="/dashboard/add-pet"
+            className="inline-flex items-center justify-center px-6 py-2.5 bg-primary text-white font-medium rounded-xl hover:bg-primary-600 transition-colors shadow-sm"
+          >
+            Add First Pet
+          </Link>
+        </div>
+      ) : (
+        /* Listings Grid */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence>
+            {listings.map(pet => {
+              const petRequests = receivedRequests.filter(req => {
+                const reqPetId = typeof req.petId === "object" && req.petId !== null ? req.petId._id : req.petId;
+                return String(reqPetId) === String(pet._id);
+              });
+              const petStatusCap = pet.status.charAt(0).toUpperCase() + pet.status.slice(1);
+              return (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  key={pet._id}
+                  className="bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden flex flex-col group"
+                >
+                  <div className="h-48 relative overflow-hidden bg-zinc-100 dark:bg-zinc-700">
+                    <img src={pet.image} alt={pet.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <div className="absolute top-3 right-3 flex gap-2">
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm backdrop-blur-sm ${pet.status === 'available' ? 'bg-green-500/90 text-white' : 'bg-zinc-500/90 text-white'}`}>
+                        {petStatusCap}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="mt-auto pt-6">
-                  <div className="grid grid-cols-2 gap-2 mb-2">
-                    <button 
-                      onClick={() => openRequestsModal(pet)}
-                      className="flex items-center justify-center gap-1.5 py-2 px-3 bg-zinc-100 dark:bg-zinc-700 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20 dark:hover:text-primary text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-medium transition-colors"
-                    >
-                      <Users className="w-4 h-4" />
-                      Requests ({pet.requests})
-                    </button>
-                    <Link 
-                      href={`/pets/${pet.id}`}
-                      className="flex items-center justify-center gap-1.5 py-2 px-3 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-medium transition-colors"
-                    >
-                      <Eye className="w-4 h-4" />
-                      View
-                    </Link>
+                  <div className="p-5 flex-1 flex flex-col">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{pet.name}</h3>
+                        <p className="text-sm text-zinc-500 dark:text-zinc-400">{pet.species} • {pet.breed}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-auto pt-6">
+                      <div className="grid grid-cols-2 gap-2 mb-2">
+                        <button 
+                          onClick={() => openRequestsModal(pet)}
+                          className="flex items-center justify-center gap-1.5 py-2 px-3 bg-zinc-100 dark:bg-zinc-700 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20 dark:hover:text-primary text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-medium transition-colors"
+                        >
+                          <Users className="w-4 h-4" />
+                          Requests ({petRequests.length})
+                        </button>
+                        <Link 
+                          href={`/pets/${pet._id}`}
+                          className="flex items-center justify-center gap-1.5 py-2 px-3 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-medium transition-colors"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View
+                        </Link>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button 
+                          onClick={() => toast.info("Editing will be fully enabled soon!")}
+                          className="flex items-center justify-center gap-1.5 py-2 px-3 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-500 text-zinc-600 dark:text-zinc-400 rounded-lg text-sm font-medium transition-colors"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                          Edit
+                        </button>
+                        <button 
+                          onClick={() => openDeleteModal(pet)}
+                          className="flex items-center justify-center gap-1.5 py-2 px-3 border border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Delete
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button className="flex items-center justify-center gap-1.5 py-2 px-3 border border-zinc-200 dark:border-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-500 text-zinc-600 dark:text-zinc-400 rounded-lg text-sm font-medium transition-colors">
-                      <Edit2 className="w-4 h-4" />
-                      Edit
-                    </button>
-                    <button 
-                      onClick={() => openDeleteModal(pet)}
-                      className="flex items-center justify-center gap-1.5 py-2 px-3 border border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      )}
 
       {/* Delete Confirmation Modal */}
       <AnimatePresence>
@@ -212,28 +326,59 @@ export default function MyListingsPage() {
               </div>
               
               <div className="p-6 overflow-y-auto flex-1">
-                {selectedPet?.requests > 0 ? (
+                {activeRequests.length > 0 ? (
                   <div className="space-y-4">
-                    {/* Mock requests list */}
-                    {[1, 2, 3].slice(0, selectedPet.requests).map(i => (
-                      <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-zinc-200 dark:border-zinc-700 rounded-xl gap-4">
+                    {activeRequests.map((request, idx) => (
+                      <div key={request._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-zinc-200 dark:border-zinc-700 rounded-xl gap-4 bg-zinc-50/50 dark:bg-zinc-900/30">
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
-                            {String.fromCharCode(64 + i)}
+                            {request.requesterName.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <p className="font-semibold text-zinc-900 dark:text-white">Applicant {i}</p>
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400">applicant{i}@example.com • 1 day ago</p>
+                            <p className="font-semibold text-zinc-900 dark:text-white">{request.requesterName}</p>
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                              {request.requesterEmail} • {request.phone || "No phone"} • {request.address || "No address"}
+                            </p>
+                            {request.notes && (
+                              <p className="mt-2 text-sm italic text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 p-2 rounded-lg">
+                                &quot;{request.notes}&quot;
+                              </p>
+                            )}
+                            <div className="mt-2">
+                              <span className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${
+                                request.status === "approved" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
+                                request.status === "rejected" ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" :
+                                "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                              }`}>
+                                {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <div className="flex gap-2">
-                          <button className="px-3 py-1.5 bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-900/50 text-green-700 dark:text-green-400 text-sm font-medium rounded-lg transition-colors">
-                            Accept
-                          </button>
-                          <button className="px-3 py-1.5 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-400 text-sm font-medium rounded-lg transition-colors">
-                            Reject
-                          </button>
-                        </div>
+                        
+                        {request.status === "pending" && (
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={() => handleRequestAction(request._id, "approve")}
+                              disabled={actionLoading === request._id}
+                              className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 shadow-sm"
+                            >
+                              {actionLoading === request._id ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <CheckCircle className="w-3.5 h-3.5" />
+                              )}
+                              Approve
+                            </button>
+                            <button 
+                              onClick={() => handleRequestAction(request._id, "reject")}
+                              disabled={actionLoading === request._id}
+                              className="px-3 py-1.5 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-400 text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
