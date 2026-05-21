@@ -20,6 +20,13 @@ export function Footer() {
       <div className="absolute top-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10" />
       <div className="absolute bottom-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-3xl -z-10" />
 
+      {/* Huge Background Watermark */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden flex justify-center pointer-events-none select-none">
+        <span className="text-[22vw] 2xl:text-[320px] font-black tracking-tighter leading-[0.8] text-zinc-900/[0.03] dark:text-white/[0.02] whitespace-nowrap translate-y-1/4">
+          PETHAVEN
+        </span>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
           
@@ -147,7 +154,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
+        <div className="pt-8 border-t border-zinc-200 dark:border-zinc-700 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
           <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
             &copy; {new Date().getFullYear()} PetHaven Adoption Platform. All rights reserved.
           </p>
