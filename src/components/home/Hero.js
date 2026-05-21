@@ -58,27 +58,38 @@ export function Hero() {
               </div>
 
               {/* Trust Indicators */}
+              <style>{`
+                @keyframes verifyPulse {
+                  0%, 100% { color: inherit; transform: scale(1) rotate(0deg); }
+                  10% { color: #22c55e; transform: scale(1.2) rotate(-10deg); }
+                  20% { color: #22c55e; transform: scale(1.2) rotate(10deg); }
+                  30% { color: #22c55e; transform: scale(1.2) rotate(-10deg); }
+                  40% { color: inherit; transform: scale(1) rotate(0deg); }
+                }
+                .animate-verify {
+                  animation: verifyPulse 3s ease-in-out infinite;
+                  display: inline-block;
+                }
+                @keyframes heartBeat {
+                  0%, 100% { color: inherit; transform: scale(1); }
+                  50% { color: #ef4444; transform: scale(1.2); }
+                }
+                .animate-heartbeat {
+                  animation: heartBeat 2s ease-in-out infinite;
+                  display: inline-block;
+                }
+              `}</style>
               <div className="mt-12 flex items-center justify-center lg:justify-start gap-8">
                 <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                  <motion.div
-                    animate={{ 
-                      color: ["currentColor", "#22c55e", "#22c55e", "#22c55e", "currentColor"], 
-                      scale: [1, 1.2, 1.2, 1.2, 1],
-                      rotate: [0, -10, 10, -10, 0]
-                    }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", times: [0, 0.1, 0.2, 0.3, 1] }}
-                  >
+                  <div className="animate-verify text-zinc-800 dark:text-zinc-300">
                     <ShieldCheck className="w-5 h-5 fill-transparent" />
-                  </motion.div>
+                  </div>
                   <span className="text-sm font-medium">Verified Pets</span>
                 </div>
                 <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1], color: ["#ef4444", "currentColor", "#ef4444"] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  >
+                  <div className="animate-heartbeat text-zinc-800 dark:text-zinc-300">
                     <Heart className="w-5 h-5 fill-current" />
-                  </motion.div>
+                  </div>
                   <span className="text-sm font-medium">Healthy & Vaccinated</span>
                 </div>
               </div>
