@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { PawPrint } from "lucide-react";
 
 export default function DashboardLayout({ children }) {
   const { user, isLoading } = useAuth();
@@ -48,12 +49,17 @@ export default function DashboardLayout({ children }) {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        {/* Decorative Background Overlay */}
+        <div className="absolute -bottom-24 -right-24 opacity-[0.03] dark:opacity-[0.02] pointer-events-none z-0">
+          <PawPrint className="w-[30rem] h-[30rem] text-zinc-900 dark:text-white transform -rotate-12" />
+        </div>
+
         {/* Dashboard Header */}
         <DashboardHeader onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto z-10 relative">
           <div className="p-4 md:p-8">
             {children}
           </div>
