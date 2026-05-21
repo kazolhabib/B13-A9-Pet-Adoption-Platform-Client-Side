@@ -78,8 +78,14 @@ export function SuccessStories() {
       </div>
 
       {/* Marquee Container */}
-      <div className="w-full relative">
-        <div className="marquee-track py-4">
+      <div 
+        className="w-full relative"
+        style={{ 
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+          maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
+        }}
+      >
+        <div className="marquee-track py-8">
           {marqueeStories.map((story, index) => (
             <div
               key={`${story.id}-${index}`}
@@ -96,10 +102,6 @@ export function SuccessStories() {
             </div>
           ))}
         </div>
-        
-        {/* Gradient overlays to fade out the edges */}
-        <div className="absolute top-0 left-0 bottom-0 w-12 md:w-32 bg-gradient-to-r from-[#fef5f0] dark:from-[#2e2621] to-transparent pointer-events-none z-10" />
-        <div className="absolute top-0 right-0 bottom-0 w-12 md:w-32 bg-gradient-to-l from-[#fef5f0] dark:from-[#2e2621] to-transparent pointer-events-none z-10" />
       </div>
     </section>
   );
