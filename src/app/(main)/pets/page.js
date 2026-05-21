@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Search, MapPin, Clock, ArrowUpDown, ArrowRight, Sparkles, Filter, Loader2 } from "lucide-react";
+import { Search, MapPin, Clock, ArrowUpDown, ArrowRight, Sparkles, Filter, Loader2, PawPrint, Heart } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
@@ -18,26 +18,29 @@ export default function AllPetsPage() {
 
   // Typewriter effect
   useEffect(() => {
-    const fullText = "Best Friend";
+    const texts = ["Best Friend", "Best Buddy"];
+    let textIndex = 0;
     let i = 0;
     let isDeleting = false;
     let timeout;
     
     const type = () => {
-      setTypedText(fullText.substring(0, i));
+      const currentText = texts[textIndex];
+      setTypedText(currentText.substring(0, i));
       
       if (isDeleting) {
         if (i > 0) {
           i--;
-          timeout = setTimeout(type, 100);
+          timeout = setTimeout(type, 80);
         } else {
           isDeleting = false;
+          textIndex = (textIndex + 1) % texts.length;
           timeout = setTimeout(type, 500);
         }
       } else {
-        if (i < fullText.length) {
+        if (i < currentText.length) {
           i++;
-          timeout = setTimeout(type, 150);
+          timeout = setTimeout(type, 120);
         } else {
           isDeleting = true;
           timeout = setTimeout(type, 2000);
@@ -96,8 +99,19 @@ export default function AllPetsPage() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Premium background ambient blur */}
-      <div className="absolute top-0 left-1/4 -mt-24 w-96 h-96 bg-zinc-200/50 dark:bg-zinc-900/20 blur-3xl rounded-full -z-10" />
-      <div className="absolute bottom-1/3 right-1/4 -mb-24 w-80 h-80 bg-zinc-100 dark:bg-zinc-800/10 blur-3xl rounded-full -z-10" />
+      <div className="absolute top-0 left-1/4 -mt-24 w-96 h-96 bg-primary/10 dark:bg-primary/5 blur-3xl rounded-full -z-10" />
+      <div className="absolute bottom-1/3 right-1/4 -mb-24 w-80 h-80 bg-rose-500/10 dark:bg-rose-500/5 blur-3xl rounded-full -z-10" />
+
+      {/* Decorative floating icons */}
+      <div className="absolute top-20 left-10 md:left-20 text-zinc-900/[0.03] dark:text-white/[0.02] -rotate-12 -z-10 pointer-events-none select-none">
+        <PawPrint className="w-48 h-48 md:w-80 md:h-80" />
+      </div>
+      <div className="absolute top-64 right-5 md:right-20 text-zinc-900/[0.03] dark:text-white/[0.02] rotate-12 -z-10 pointer-events-none select-none">
+        <Heart className="w-32 h-32 md:w-64 md:h-64" />
+      </div>
+      <div className="absolute bottom-40 left-1/4 text-zinc-900/[0.03] dark:text-white/[0.02] rotate-45 -z-10 pointer-events-none select-none">
+        <PawPrint className="w-40 h-40 md:w-72 md:h-72" />
+      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header Hero Area */}
@@ -105,7 +119,7 @@ export default function AllPetsPage() {
           <motion.span 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-900 text-xs font-bold tracking-widest uppercase text-zinc-500 dark:text-zinc-400 mb-6 border border-zinc-200/50 dark:border-zinc-800/50"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-900 text-xs font-bold tracking-widest uppercase text-zinc-500 dark:text-zinc-400 mb-6 border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm"
           >
             <motion.div animate={{ rotate: 360 }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}>
               <Sparkles className="w-4 h-4 text-primary" />
@@ -119,9 +133,9 @@ export default function AllPetsPage() {
             className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white mb-6 tracking-tight"
           >
             Find Your{" "}
-            <span className="relative inline-block border-b-[5px] md:border-b-[8px] border-zinc-300 dark:border-zinc-700 pb-1">
+            <span className="relative inline-block border-b-[5px] md:border-b-[8px] border-zinc-300 dark:border-zinc-700 pb-1 text-black dark:text-white">
               <span className="invisible">Best Friend</span>
-              <span className="absolute left-0 top-0 text-zinc-900 dark:text-white whitespace-nowrap">
+              <span className="absolute left-0 top-0 text-black dark:text-white whitespace-nowrap">
                 {typedText}<span className="animate-[pulse_1s_ease-in-out_infinite] text-primary ml-[2px]">|</span>
               </span>
             </span>
@@ -130,7 +144,7 @@ export default function AllPetsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed"
+            className="text-lg text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed max-w-2xl mx-auto"
           >
             Browse our list of rescue companions looking for a forever home. Each one is vaccinated, house-trained, and ready to share their love.
           </motion.p>
