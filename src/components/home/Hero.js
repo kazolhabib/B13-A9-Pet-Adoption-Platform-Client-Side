@@ -21,7 +21,12 @@ export function Hero() {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm mb-8 backdrop-blur-md">
-                <Sparkles className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                >
+                  <Sparkles className="w-4 h-4 text-zinc-800 dark:text-zinc-200" />
+                </motion.div>
                 <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 tracking-wide uppercase">
                   Premium Pet Adoption
                 </span>
@@ -39,14 +44,14 @@ export function Hero() {
               <div className="flex flex-col sm:flex-row items-center gap-5 justify-center lg:justify-start">
                 <Link
                   href="/pets"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold rounded-2xl hover:opacity-90 transition-all shadow-xl hover:shadow-2xl hover:-tranzinc-y-1"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold rounded-2xl hover:opacity-90 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
                 >
                   Adopt Now
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
                   href="/about"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white font-bold rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all shadow-md border border-zinc-200 dark:border-zinc-800 hover:shadow-lg hover:-tranzinc-y-1"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white font-bold rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all shadow-md border border-zinc-200 dark:border-zinc-800 hover:shadow-lg hover:-translate-y-1"
                 >
                   Learn More
                 </Link>
@@ -59,7 +64,12 @@ export function Hero() {
                   <span className="text-sm font-medium">Verified Pets</span>
                 </div>
                 <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                  <Heart className="w-5 h-5 text-zinc-800 dark:text-zinc-300" />
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1], color: ["#ef4444", "currentColor", "#ef4444"] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <Heart className="w-5 h-5 fill-current" />
+                  </motion.div>
                   <span className="text-sm font-medium">Healthy & Vaccinated</span>
                 </div>
               </div>
@@ -88,15 +98,21 @@ export function Hero() {
               initial={{ opacity: 0, y: 30, x: -30 }}
               animate={{ opacity: 1, y: 0, x: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="absolute -bottom-8 -left-8 md:bottom-10 md:-left-12 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl p-5 rounded-3xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-4"
+              className="absolute -bottom-8 -left-8 md:bottom-10 md:-left-12 z-20"
             >
-              <div className="bg-zinc-900 dark:bg-white p-3.5 rounded-2xl text-white dark:text-zinc-900 shadow-lg">
-                <Heart className="w-6 h-6 fill-current" />
-              </div>
-              <div>
-                <p className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">5,000+</p>
-                <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">Happy Adoptions</p>
-              </div>
+              <motion.div 
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl p-5 rounded-3xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-4"
+              >
+                <div className="bg-zinc-900 dark:bg-white p-3.5 rounded-2xl text-white dark:text-zinc-900 shadow-lg">
+                  <Heart className="w-6 h-6 fill-current text-rose-500 dark:text-rose-500" />
+                </div>
+                <div>
+                  <p className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">5,000+</p>
+                  <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">Happy Adoptions</p>
+                </div>
+              </motion.div>
             </motion.div>
 
             {/* Floating Glassmorphism Card 2 */}
@@ -104,14 +120,20 @@ export function Hero() {
               initial={{ opacity: 0, y: -30, x: 30 }}
               animate={{ opacity: 1, y: 0, x: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="absolute -top-8 -right-8 md:top-10 md:-right-8 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl p-4 rounded-3xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-3"
+              className="absolute -top-8 -right-8 md:top-10 md:-right-8 z-20"
             >
-              <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-2xl text-zinc-900 dark:text-white shadow-sm">
-                <PawPrint className="w-5 h-5" />
-              </div>
-              <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200 pr-2">
-                100+ Shelters
-              </p>
+              <motion.div
+                animate={{ y: [0, 15, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl p-4 rounded-3xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-3"
+              >
+                <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-2xl text-zinc-900 dark:text-white shadow-sm">
+                  <PawPrint className="w-5 h-5 text-primary" />
+                </div>
+                <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200 pr-2">
+                  100+ Shelters
+                </p>
+              </motion.div>
             </motion.div>
           </div>
         </div>
