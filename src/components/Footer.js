@@ -19,8 +19,8 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand Info */}
-          <div className="col-span-1 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4 group inline-flex">
+          <div className="col-span-1 md:col-span-1 text-center md:text-left">
+            <Link href="/" className="flex items-center justify-center md:justify-start gap-2 mb-4 group">
               <div className="bg-primary/10 p-2 rounded-xl text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                 <PawPrint className="w-6 h-6" />
               </div>
@@ -31,7 +31,7 @@ export function Footer() {
             <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6">
               Connecting loving families with animals in need. We believe every pet deserves a safe, happy, and forever home.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-4 justify-center md:justify-start">
               <a href="#" className="text-zinc-400 hover:text-blue-600 transition-colors" title="Facebook">
                 <FacebookIcon className="w-5 h-5" />
               </a>
@@ -48,7 +48,7 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="text-center md:text-left">
             <h3 className="font-semibold text-zinc-900 dark:text-white mb-4">Quick Links</h3>
             <ul className="space-y-3">
               <li>
@@ -75,7 +75,7 @@ export function Footer() {
           </div>
 
           {/* Policies */}
-          <div>
+          <div className="text-center md:text-left">
             <h3 className="font-semibold text-zinc-900 dark:text-white mb-4">Policies</h3>
             <ul className="space-y-3">
               <li>
@@ -97,18 +97,18 @@ export function Footer() {
           </div>
 
           {/* Contact */}
-          <div>
+          <div className="text-center md:text-left">
             <h3 className="font-semibold text-zinc-900 dark:text-white mb-4">Contact Us</h3>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+              <li className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-3 text-sm text-zinc-600 dark:text-zinc-400">
                 <MapPin className="w-5 h-5 text-primary shrink-0" />
                 <span>123 Adoption Avenue, Pet City, PC 12345</span>
               </li>
-              <li className="flex items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+              <li className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-3 text-sm text-zinc-600 dark:text-zinc-400">
                 <Phone className="w-5 h-5 text-primary shrink-0" />
                 <span>(555) 123-4567</span>
               </li>
-              <li className="flex items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+              <li className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-3 text-sm text-zinc-600 dark:text-zinc-400">
                 <Mail className="w-5 h-5 text-primary shrink-0" />
                 <span>hello@pethaven.com</span>
               </li>
@@ -116,11 +116,11 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-zinc-200 dark:border-zinc-700 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="pt-8 border-t border-zinc-200 dark:border-zinc-700 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             &copy; {new Date().getFullYear()} PetHaven Adoption Platform. All rights reserved.
           </p>
-          <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+          <div className="flex items-center justify-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
             Made with <span className="text-red-500">❤️</span> for pets
           </div>
         </div>
