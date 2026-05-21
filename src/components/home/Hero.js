@@ -50,7 +50,7 @@ export function Hero() {
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="/about"
+                  href="#why-adopt"
                   className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white font-bold rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all shadow-md border border-zinc-200 dark:border-zinc-800 hover:shadow-lg hover:-translate-y-1"
                 >
                   Learn More
