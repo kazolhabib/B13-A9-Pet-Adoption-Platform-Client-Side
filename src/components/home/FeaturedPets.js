@@ -12,7 +12,7 @@ export function FeaturedPets() {
   useEffect(() => {
     async function fetchPets() {
       try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:5001";
+        const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
         const response = await fetch(`${API_BASE}/api/pets`);
         const data = await response.json();
         if (data.success && data.data) {
