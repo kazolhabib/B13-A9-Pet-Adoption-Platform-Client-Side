@@ -113,13 +113,13 @@ export function Sidebar({ isOpen, onClose }) {
                 />
               )}
               <div
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                   isActive
                     ? `bg-gradient-to-br ${item.color} text-white shadow-sm`
                     : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300"
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-4 h-4 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6" />
               </div>
               <span>{item.name}</span>
               {isActive && (
@@ -141,20 +141,20 @@ export function Sidebar({ isOpen, onClose }) {
           <Link
             href="/"
             onClick={onClose}
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all"
+            className="group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all"
           >
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500">
-              <Home className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+              <Home className="w-4 h-4 transition-transform duration-300 group-hover:scale-125 group-hover:-rotate-6" />
             </div>
             Back to Home
           </Link>
           <Link
             href="/pets"
             onClick={onClose}
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all"
+            className="group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all"
           >
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500">
-              <Sparkles className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+              <Sparkles className="w-4 h-4 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" />
             </div>
             Browse Pets
           </Link>
@@ -165,10 +165,10 @@ export function Sidebar({ isOpen, onClose }) {
       <div className="p-3 mt-2 border-t border-zinc-200/60 dark:border-zinc-700/40">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+          className="group w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
         >
-          <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-950/30 flex items-center justify-center">
-            <LogOut className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-950/30 flex items-center justify-center transition-colors group-hover:bg-red-100 dark:group-hover:bg-red-900/40">
+            <LogOut className="w-4 h-4 transition-transform duration-300 group-hover:scale-125 group-hover:-rotate-12" />
           </div>
           Logout
         </button>

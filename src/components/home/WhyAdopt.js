@@ -72,7 +72,12 @@ export function WhyAdopt() {
           className="text-center max-w-2xl mx-auto mb-20"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6">
-            <Sparkles className="w-4 h-4" />
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="w-4 h-4" />
+            </motion.div>
             <span className="text-sm font-bold tracking-wide uppercase">Make a Difference</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white mb-6 tracking-tight">

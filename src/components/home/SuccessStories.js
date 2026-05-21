@@ -65,7 +65,12 @@ export function SuccessStories() {
           className="text-center max-w-2xl mx-auto"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 text-rose-500 mb-6">
-            <Heart className="w-4 h-4 fill-rose-500" />
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Heart className="w-4 h-4 fill-rose-500" />
+            </motion.div>
             <span className="text-sm font-bold tracking-wide uppercase">Happy Tails</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white mb-6 tracking-tight">
