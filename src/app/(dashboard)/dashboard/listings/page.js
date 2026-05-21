@@ -20,14 +20,20 @@ export default function MyListingsPage() {
   const fetchListingsAndRequests = async () => {
     try {
       setIsLoadingListings(true);
+      const token = localStorage.getItem("token");
+      const headers = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
       // Fetch listings
       const listResponse = await fetch(`${API_BASE}/api/pets/my-listings`, {
+        headers,
         credentials: "include",
       });
       const listData = await listResponse.json();
 
       // Fetch received requests
       const reqResponse = await fetch(`${API_BASE}/api/requests/received`, {
+        headers,
         credentials: "include",
       });
       const reqData = await reqResponse.json();
@@ -64,8 +70,13 @@ export default function MyListingsPage() {
 
   const confirmDelete = async () => {
     try {
+      const token = localStorage.getItem("token");
+      const headers = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
       const response = await fetch(`${API_BASE}/api/pets/${selectedPet._id}`, {
         method: "DELETE",
+        headers,
         credentials: "include",
       });
       const data = await response.json();
@@ -92,8 +103,13 @@ export default function MyListingsPage() {
   const handleRequestAction = async (requestId, action) => {
     setActionLoading(requestId);
     try {
+      const token = localStorage.getItem("token");
+      const headers = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
       const response = await fetch(`${API_BASE}/api/requests/${requestId}/${action}`, {
         method: "PATCH",
+        headers,
         credentials: "include",
       });
       const data = await response.json();

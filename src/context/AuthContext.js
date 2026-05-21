@@ -48,9 +48,15 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const checkUserSession = async () => {
       try {
+        const token = localStorage.getItem("token");
+        const headers = { "Content-Type": "application/json" };
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+
         const response = await fetch(`${API_BASE}/api/me`, {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+          headers,
           credentials: "include",
         });
 
@@ -83,6 +89,9 @@ export function AuthProvider({ children }) {
       const data = await parseJSONSafely(response);
 
       if (isSuccess(response, data) && data?.user) {
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
         setUser(data.user);
         toast.success("Welcome back! Successfully signed in.");
         return { success: true };
@@ -108,6 +117,9 @@ export function AuthProvider({ children }) {
       const data = await parseJSONSafely(response);
 
       if (isSuccess(response, data) && data?.user) {
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
         setUser(data.user);
         toast.success("Account created successfully!");
         return { success: true };
@@ -133,6 +145,9 @@ export function AuthProvider({ children }) {
       const data = await parseJSONSafely(response);
 
       if (isSuccess(response, data) && data?.user) {
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
         setUser(data.user);
         toast.success("Welcome! Signed in with Google successfully.");
         return { success: true };
@@ -155,9 +170,12 @@ export function AuthProvider({ children }) {
       });
 
       if (response?.ok) {
+        localStorage.removeItem("token");
         setUser(null);
         toast.success("Logged out successfully.");
       } else {
+        localStorage.removeItem("token");
+        setUser(null);
         toast.error("Logout failed.");
       }
     } catch (error) {

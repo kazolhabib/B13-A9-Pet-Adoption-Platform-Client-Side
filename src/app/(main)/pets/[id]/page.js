@@ -63,11 +63,15 @@ export default function PetDetailsPage({ params }) {
 
     setIsSubmitting(true);
     try {
+      const token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
       const response = await fetch(`${API_BASE}/api/requests`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify({
           petId: pet._id,
           petName: pet.name,

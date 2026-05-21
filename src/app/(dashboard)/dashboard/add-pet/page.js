@@ -34,11 +34,15 @@ export default function AddPetPage() {
         description: data.description,
       };
 
+      const token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
       const response = await fetch(`${API_BASE}/api/pets`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify(petPayload),
         credentials: "include",
       });

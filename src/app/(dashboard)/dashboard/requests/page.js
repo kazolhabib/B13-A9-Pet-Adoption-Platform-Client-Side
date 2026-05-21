@@ -16,7 +16,12 @@ export default function MyRequestsPage() {
   const fetchMyRequests = async () => {
     try {
       setIsLoading(true);
+      const token = localStorage.getItem("token");
+      const headers = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
       const response = await fetch(`${API_BASE}/api/requests/my-requests`, {
+        headers,
         credentials: "include",
       });
       const data = await response.json();
@@ -43,8 +48,13 @@ export default function MyRequestsPage() {
     
     setIsDeleting(requestId);
     try {
+      const token = localStorage.getItem("token");
+      const headers = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
       const response = await fetch(`${API_BASE}/api/requests/${requestId}`, {
         method: "DELETE",
+        headers,
         credentials: "include",
       });
       const data = await response.json();
