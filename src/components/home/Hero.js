@@ -62,11 +62,11 @@ export function Hero() {
                 <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
                   <motion.div
                     animate={{ 
-                      color: ["currentColor", "#22c55e", "currentColor"], 
-                      scale: [1, 1.15, 1],
+                      color: ["currentColor", "#22c55e", "#22c55e", "#22c55e", "currentColor"], 
+                      scale: [1, 1.2, 1.2, 1.2, 1],
                       rotate: [0, -10, 10, -10, 0]
                     }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", times: [0, 0.1, 0.2, 0.3, 1] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", times: [0, 0.1, 0.2, 0.3, 1] }}
                   >
                     <ShieldCheck className="w-5 h-5 fill-transparent" />
                   </motion.div>
