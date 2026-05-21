@@ -123,7 +123,7 @@ export function Footer() {
               />
               <button 
                 type="button" 
-                className="px-6 py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary/90 transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-md shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0"
+                className="px-6 py-3 rounded-xl bg-primary text-white dark:text-zinc-900 font-semibold hover:bg-primary/90 transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-md shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0"
               >
                 Subscribe
                 <Send className="w-4 h-4" />
