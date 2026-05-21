@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Quote } from "lucide-react";
+import { Quote, Heart } from "lucide-react";
 
 export function SuccessStories() {
   const stories = [
@@ -41,7 +41,7 @@ export function SuccessStories() {
   const marqueeStories = [...stories, ...stories];
 
   return (
-    <section className="py-24 bg-primary/5 dark:bg-primary/5 overflow-hidden">
+    <section className="py-32 bg-primary/5 dark:bg-primary/5 overflow-hidden">
       <style>{`
         .marquee-track {
           display: flex;
@@ -57,17 +57,21 @@ export function SuccessStories() {
         }
       `}</style>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white mb-4">
-            Success Stories
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 text-rose-500 mb-6">
+            <Heart className="w-4 h-4 fill-rose-500" />
+            <span className="text-sm font-bold tracking-wide uppercase">Happy Tails</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white mb-6 tracking-tight">
+            Heartwarming <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-primary">Success Stories</span>
           </h2>
-          <p className="text-zinc-600 dark:text-zinc-400 text-lg">
+          <p className="text-zinc-600 dark:text-zinc-400 text-lg md:text-xl leading-relaxed">
             Read heartwarming stories from families who found their perfect match through our platform.
           </p>
         </motion.div>
