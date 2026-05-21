@@ -58,7 +58,7 @@ export function WhyAdopt() {
   };
 
   return (
-    <section className="relative py-16 sm:py-28 bg-zinc-50 dark:bg-zinc-900/50 overflow-hidden">
+    <section className="relative py-[3.75rem] md:py-28 bg-zinc-50 dark:bg-zinc-900/50 overflow-hidden">
       {/* Decorative Background Blobs */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -z-10 mix-blend-multiply dark:mix-blend-overlay animate-pulse" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] -z-10 mix-blend-multiply dark:mix-blend-overlay animate-pulse" style={{ animationDelay: '2s' }} />

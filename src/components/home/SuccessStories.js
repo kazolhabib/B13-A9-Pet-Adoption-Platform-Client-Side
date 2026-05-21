@@ -41,7 +41,7 @@ export function SuccessStories() {
   const marqueeStories = [...stories, ...stories];
 
   return (
-    <section className="py-32 bg-primary/5 dark:bg-primary/5 overflow-hidden">
+    <section className="py-[3.75rem] md:py-32 bg-primary/5 dark:bg-primary/5 overflow-hidden">
       <style>{`
         .marquee-track {
           display: flex;

@@ -23,7 +23,7 @@ export function OurVision() {
   ];
 
   return (
-    <section className="py-24 bg-zinc-900 dark:bg-black text-white relative overflow-hidden">
+    <section className="py-[3.75rem] md:py-24 bg-zinc-900 dark:bg-black text-white relative overflow-hidden">
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-white/10 blur-3xl rounded-full" />
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-zinc-500/20 blur-3xl rounded-full" />
       

@@ -13,7 +13,7 @@ export function PetCareTips() {
   ];
 
   return (
-    <section className="py-24 bg-white dark:bg-zinc-900">
+    <section className="py-[3.75rem] md:py-24 bg-white dark:bg-zinc-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-16 items-center">
           <motion.div 

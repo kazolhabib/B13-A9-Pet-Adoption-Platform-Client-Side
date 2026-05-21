@@ -6,7 +6,7 @@ import { ArrowRight, Heart, Sparkles, ShieldCheck, PawPrint } from "lucide-react
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[var(--background)] pt-24 pb-32">
+    <section className="relative overflow-hidden bg-[var(--background)] py-[3.75rem] md:pt-24 md:pb-32">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-1/2 -tranzinc-x-1/2 w-[120%] h-[800px] bg-gradient-to-b from-zinc-200/50 dark:from-zinc-800/30 via-transparent to-transparent rounded-[100%] blur-3xl -z-10" />
       <div className="absolute top-40 right-10 w-72 h-72 bg-zinc-300/30 dark:bg-zinc-800/50 blur-[100px] rounded-full -z-10" />

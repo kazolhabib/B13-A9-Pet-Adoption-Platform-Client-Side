@@ -32,7 +32,7 @@ export function HowItWorks() {
   ];
 
   return (
-    <section className="py-32 bg-zinc-50 dark:bg-[var(--background)] relative overflow-hidden">
+    <section className="py-[3.75rem] md:py-32 bg-zinc-50 dark:bg-[var(--background)] relative overflow-hidden">
       
       {/* Background Animated Gears */}
       <motion.div 
