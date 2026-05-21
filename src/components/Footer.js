@@ -26,7 +26,7 @@ export function Footer() {
           {/* Brand Info */}
           <div className="col-span-1 md:col-span-2 lg:col-span-4 text-center md:text-left">
             <Link href="/" className="inline-flex items-center justify-center md:justify-start gap-3 mb-6 group">
-              <div className="bg-primary p-2.5 rounded-xl text-white shadow-lg shadow-primary/30 group-hover:scale-105 transition-transform">
+              <div className="bg-primary/10 p-2.5 rounded-xl text-primary shadow-sm group-hover:scale-105 transition-transform">
                 <PawPrint className="w-6 h-6" />
               </div>
               <span className="font-black text-2xl tracking-tight text-zinc-900 dark:text-white">

@@ -62,8 +62,8 @@ export function Navbar() {
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-primary/10 p-2 rounded-xl text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-              <PawPrint className="w-6 h-6" />
+            <div className="bg-primary/10 p-2 rounded-xl text-primary transition-colors">
+              <PawPrint className="w-6 h-6 group-hover:scale-110 transition-transform" />
             </div>
             <span className="font-bold text-xl tracking-tight text-zinc-900 dark:text-white">
               PetHaven
