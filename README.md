@@ -4,7 +4,7 @@
 PetHaven is a modern, responsive Pet Adoption Platform aimed at giving rescued animals a forever home. The platform allows users to browse available pets, view detailed profiles, submit adoption requests, and allows pet owners to list their pets for adoption and manage requests. 
 
 ## Live URL
-[https://your-client-url.vercel.app](https://your-client-url.vercel.app)
+[https://petadoption-platform.netlify.app/](https://petadoption-platform.netlify.app/)
 
 ## Features
 - **Dynamic Pet Exploration**: Explore all pets through a seamless grid interface with advanced Search (by name/breed) and Filtering (by species) options.
