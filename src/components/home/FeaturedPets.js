@@ -43,7 +43,7 @@ export function FeaturedPets() {
           <div className="max-w-2xl">
             <span className="text-zinc-500 dark:text-zinc-400 font-bold tracking-widest uppercase text-sm mb-2 block">Available for Adoption</span>
             <h2 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white mb-4 tracking-tight">
-              Featured Friends
+              Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-400">Friends</span>
             </h2>
             <p className="text-zinc-600 dark:text-zinc-400 text-lg font-medium">
               Meet some of our adorable friends who are currently looking for a loving family. Your new best friend might be right here!
