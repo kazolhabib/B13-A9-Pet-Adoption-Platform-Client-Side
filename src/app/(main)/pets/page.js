@@ -103,13 +103,13 @@ export default function AllPetsPage() {
       <div className="absolute bottom-1/3 right-1/4 -mb-24 w-80 h-80 bg-rose-500/10 dark:bg-rose-500/5 blur-3xl rounded-full -z-10" />
 
       {/* Decorative floating icons */}
-      <div className="absolute top-20 left-10 md:left-20 text-zinc-900/[0.03] dark:text-white/[0.02] -rotate-12 -z-10 pointer-events-none select-none">
+      <div className="absolute top-20 left-10 md:left-20 text-zinc-900 dark:text-white opacity-[0.03] dark:opacity-5 -rotate-12 -z-10 pointer-events-none select-none">
         <PawPrint className="w-48 h-48 md:w-80 md:h-80" />
       </div>
-      <div className="absolute top-64 right-5 md:right-20 text-zinc-900/[0.03] dark:text-white/[0.02] rotate-12 -z-10 pointer-events-none select-none">
+      <div className="absolute top-64 right-5 md:right-20 text-zinc-900 dark:text-white opacity-[0.03] dark:opacity-5 rotate-12 -z-10 pointer-events-none select-none">
         <Heart className="w-32 h-32 md:w-64 md:h-64" />
       </div>
-      <div className="absolute bottom-40 left-1/4 text-zinc-900/[0.03] dark:text-white/[0.02] rotate-45 -z-10 pointer-events-none select-none">
+      <div className="absolute bottom-40 left-1/4 text-zinc-900 dark:text-white opacity-[0.03] dark:opacity-5 rotate-45 -z-10 pointer-events-none select-none">
         <PawPrint className="w-40 h-40 md:w-72 md:h-72" />
       </div>
 
@@ -133,9 +133,9 @@ export default function AllPetsPage() {
             className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white mb-6 tracking-tight"
           >
             Find Your{" "}
-            <span className="relative inline-block border-b-[5px] md:border-b-[8px] border-zinc-300 dark:border-zinc-700 pb-1 text-black dark:text-white">
+            <span className="relative inline-block border-b-[5px] md:border-b-[8px] border-zinc-300 dark:border-zinc-700 pb-1 text-zinc-900 dark:text-white">
               <span className="invisible">Best Friend</span>
-              <span className="absolute left-0 top-0 text-black dark:text-white whitespace-nowrap">
+              <span className="absolute left-0 top-0 text-zinc-900 dark:text-white whitespace-nowrap">
                 {typedText}<span className="animate-[pulse_1s_ease-in-out_infinite] text-primary ml-[2px]">|</span>
               </span>
             </span>
