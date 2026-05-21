@@ -47,6 +47,7 @@ export default function MyListingsPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line
     fetchListingsAndRequests();
   }, []);
 

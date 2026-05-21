@@ -12,6 +12,7 @@ export function DashboardHeader({ onToggleSidebar }) {
 
   useEffect(() => {
     if (document.documentElement.classList.contains("dark")) {
+      // eslint-disable-next-line
       setIsDark(true);
     }
   }, []);

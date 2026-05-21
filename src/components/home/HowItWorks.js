@@ -76,7 +76,7 @@ export function HowItWorks() {
             transition={{ delay: 0.2 }}
             className="text-zinc-600 dark:text-zinc-400 text-lg font-medium"
           >
-            We've streamlined our adoption process to make it as simple and transparent as possible, so you can focus on welcoming your new family member.
+            We&apos;ve streamlined our adoption process to make it as simple and transparent as possible, so you can focus on welcoming your new family member.
           </motion.p>
         </div>
 

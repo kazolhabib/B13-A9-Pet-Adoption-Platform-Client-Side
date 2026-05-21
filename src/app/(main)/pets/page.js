@@ -302,7 +302,7 @@ export default function AllPetsPage() {
                     <Filter className="w-10 h-10" />
                   </div>
                   <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-2">No Companions Found</h3>
-                  <p className="text-zinc-500 dark:text-zinc-400 text-sm max-w-sm mx-auto font-medium">We couldn't find any pets matching your criteria. Try adjusting your filters or search terms.</p>
+                  <p className="text-zinc-500 dark:text-zinc-400 text-sm max-w-sm mx-auto font-medium">We couldn&apos;t find any pets matching your criteria. Try adjusting your filters or search terms.</p>
                 </motion.div>
               )}
             </AnimatePresence>

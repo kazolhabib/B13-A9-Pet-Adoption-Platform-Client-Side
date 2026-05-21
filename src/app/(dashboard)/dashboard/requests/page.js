@@ -34,6 +34,7 @@ export default function MyRequestsPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line
     fetchMyRequests();
   }, []);
 
