@@ -17,41 +17,85 @@ export function SuccessStories() {
       image: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=600&q=80",
       quote: "I was looking for a quiet companion, and Whiskers is exactly that. Adopting her was the best decision I've made this year.",
     },
+    {
+      id: 3,
+      name: "Mike & Shadow",
+      image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=600&q=80",
+      quote: "Shadow is the smartest dog I've ever met. We love going on hiking trips together. Thank you PetHaven!",
+    },
+    {
+      id: 4,
+      name: "Emily & Bella",
+      image: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=600&q=80",
+      quote: "Bella the rabbit is so adorable! She has her own little space in my apartment and loves to cuddle while I read.",
+    },
+    {
+      id: 5,
+      name: "David & Max",
+      image: "https://images.unsplash.com/photo-1589965716319-4a041b58fa8a?auto=format&fit=crop&w=600&q=80",
+      quote: "Adopting Max gave me a reason to stay active. He is the most loyal friend I could have asked for.",
+    }
   ];
 
+  // Duplicate stories to create a seamless infinite loop
+  const marqueeStories = [...stories, ...stories];
+
   return (
-    <section className="py-24 bg-primary/5 dark:bg-primary/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-16">
+    <section className="py-24 bg-primary/5 dark:bg-primary/5 overflow-hidden">
+      <style>{`
+        .marquee-track {
+          display: flex;
+          width: max-content;
+          animation: marquee 35s linear infinite;
+        }
+        .marquee-track:hover {
+          animation-play-state: paused;
+        }
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center max-w-2xl mx-auto"
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white mb-4">
             Success Stories
           </h2>
           <p className="text-zinc-600 dark:text-zinc-400 text-lg">
             Read heartwarming stories from families who found their perfect match through our platform.
           </p>
-        </div>
+        </motion.div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {stories.map((story, index) => (
-            <motion.div
-              key={story.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-              className="bg-white dark:bg-zinc-800 rounded-3xl p-8 shadow-sm flex flex-col md:flex-row gap-6 items-center"
+      {/* Marquee Container */}
+      <div className="w-full relative">
+        <div className="marquee-track py-4">
+          {marqueeStories.map((story, index) => (
+            <div
+              key={`${story.id}-${index}`}
+              className="bg-white dark:bg-zinc-800/80 backdrop-blur-sm rounded-3xl p-8 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col md:flex-row gap-6 items-center w-[350px] md:w-[500px] shrink-0 mx-4 border border-transparent hover:border-primary/20 cursor-pointer"
             >
-              <div className="w-32 h-32 shrink-0 rounded-full overflow-hidden border-4 border-primary/20">
+              <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full overflow-hidden border-4 border-primary/20">
                 <img src={story.image} alt={story.name} className="w-full h-full object-cover" />
               </div>
               <div>
                 <Quote className="w-8 h-8 text-primary/30 mb-3" />
-                <p className="text-zinc-700 dark:text-zinc-300 italic mb-4">&quot;{story.quote}&quot;</p>
+                <p className="text-zinc-700 dark:text-zinc-300 italic mb-4 line-clamp-3 text-sm md:text-base">&quot;{story.quote}&quot;</p>
                 <h4 className="font-bold text-zinc-900 dark:text-white">{story.name}</h4>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
+        
+        {/* Gradient overlays to fade out the edges */}
+        <div className="absolute top-0 left-0 bottom-0 w-12 md:w-32 bg-gradient-to-r from-[#fef5f0] dark:from-[#2e2621] to-transparent pointer-events-none z-10" />
+        <div className="absolute top-0 right-0 bottom-0 w-12 md:w-32 bg-gradient-to-l from-[#fef5f0] dark:from-[#2e2621] to-transparent pointer-events-none z-10" />
       </div>
     </section>
   );
