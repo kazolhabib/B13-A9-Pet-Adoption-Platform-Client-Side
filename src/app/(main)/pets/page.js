@@ -14,6 +14,40 @@ export default function AllPetsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecies, setSelectedSpecies] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
+  const [typedText, setTypedText] = useState("");
+
+  // Typewriter effect
+  useEffect(() => {
+    const fullText = "Best Friend";
+    let i = 0;
+    let isDeleting = false;
+    let timeout;
+    
+    const type = () => {
+      setTypedText(fullText.substring(0, i));
+      
+      if (isDeleting) {
+        if (i > 0) {
+          i--;
+          timeout = setTimeout(type, 100);
+        } else {
+          isDeleting = false;
+          timeout = setTimeout(type, 500);
+        }
+      } else {
+        if (i < fullText.length) {
+          i++;
+          timeout = setTimeout(type, 150);
+        } else {
+          isDeleting = true;
+          timeout = setTimeout(type, 2000);
+        }
+      }
+    };
+    
+    timeout = setTimeout(type, 500);
+    return () => clearTimeout(timeout);
+  }, []);
 
   // Quick category tabs list
   const categories = [
@@ -71,9 +105,11 @@ export default function AllPetsPage() {
           <motion.span 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-900 text-xs font-bold tracking-widest uppercase text-zinc-500 dark:text-zinc-400 mb-6 border border-zinc-200/50 dark:border-zinc-800/50"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-900 text-xs font-bold tracking-widest uppercase text-zinc-500 dark:text-zinc-400 mb-6 border border-zinc-200/50 dark:border-zinc-800/50"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <motion.div animate={{ rotate: 360 }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}>
+              <Sparkles className="w-4 h-4 text-primary" />
+            </motion.div>
             Our Companions
           </motion.span>
           <motion.h1 
@@ -82,7 +118,13 @@ export default function AllPetsPage() {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white mb-6 tracking-tight"
           >
-            Find Your <span className="underline decoration-zinc-300 dark:decoration-zinc-700 underline-offset-8">Best Friend</span>
+            Find Your{" "}
+            <span className="relative inline-block border-b-[5px] md:border-b-[8px] border-zinc-300 dark:border-zinc-700 pb-1">
+              <span className="invisible">Best Friend</span>
+              <span className="absolute left-0 top-0 text-zinc-900 dark:text-white whitespace-nowrap">
+                {typedText}<span className="animate-[pulse_1s_ease-in-out_infinite] text-primary ml-[2px]">|</span>
+              </span>
+            </span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
