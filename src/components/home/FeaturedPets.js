@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, MapPin, Clock } from "lucide-react";
+import { ArrowRight, MapPin, Clock, PawPrint, Heart } from "lucide-react";
 
 export function FeaturedPets() {
   const [pets, setPets] = useState([]);
@@ -37,8 +37,16 @@ export function FeaturedPets() {
   };
 
   return (
-    <section className="py-[3.75rem] md:py-26 bg-[var(--background)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-[3.75rem] md:py-26 bg-[var(--background)] relative overflow-hidden">
+      {/* Decorative floating icons */}
+      <div className="absolute top-10 left-10 text-black dark:text-white opacity-10 -rotate-12 z-0 pointer-events-none select-none">
+        <PawPrint className="w-32 h-32 md:w-64 md:h-64" />
+      </div>
+      <div className="absolute bottom-20 right-5 text-black dark:text-white opacity-10 rotate-12 z-0 pointer-events-none select-none">
+        <Heart className="w-24 h-24 md:w-48 md:h-48" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div className="max-w-2xl">
             <span className="text-zinc-500 dark:text-zinc-400 font-bold tracking-widest uppercase text-sm mb-2 block">Available for Adoption</span>
