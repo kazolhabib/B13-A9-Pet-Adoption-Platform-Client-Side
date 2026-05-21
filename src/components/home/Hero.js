@@ -60,7 +60,16 @@ export function Hero() {
               {/* Trust Indicators */}
               <div className="mt-12 flex items-center justify-center lg:justify-start gap-8">
                 <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                  <ShieldCheck className="w-5 h-5 text-zinc-800 dark:text-zinc-300" />
+                  <motion.div
+                    animate={{ 
+                      color: ["currentColor", "#22c55e", "currentColor"], 
+                      scale: [1, 1.15, 1],
+                      rotate: [0, -10, 10, -10, 0]
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", times: [0, 0.1, 0.2, 0.3, 1] }}
+                  >
+                    <ShieldCheck className="w-5 h-5 fill-transparent" />
+                  </motion.div>
                   <span className="text-sm font-medium">Verified Pets</span>
                 </div>
                 <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
@@ -101,8 +110,8 @@ export function Hero() {
               className="absolute -bottom-8 -left-8 md:bottom-10 md:-left-12 z-20"
             >
               <motion.div 
-                animate={{ y: [0, -12, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                animate={{ y: -15 }}
+                transition={{ duration: 2.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
                 className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl p-5 rounded-3xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-4"
               >
                 <div className="bg-zinc-900 dark:bg-white p-3.5 rounded-2xl text-white dark:text-zinc-900 shadow-lg">
@@ -123,8 +132,8 @@ export function Hero() {
               className="absolute -top-8 -right-8 md:top-10 md:-right-8 z-20"
             >
               <motion.div
-                animate={{ y: [0, 15, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                animate={{ y: 20 }}
+                transition={{ duration: 3, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 0.5 }}
                 className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl p-4 rounded-3xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-3"
               >
                 <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-2xl text-zinc-900 dark:text-white shadow-sm">
