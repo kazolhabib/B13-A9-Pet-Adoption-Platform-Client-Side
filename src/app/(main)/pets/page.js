@@ -99,17 +99,17 @@ export default function AllPetsPage() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Premium background ambient blur */}
-      <div className="absolute top-0 left-1/4 -mt-24 w-96 h-96 bg-primary/10 dark:bg-primary/5 blur-3xl rounded-full -z-10" />
-      <div className="absolute bottom-1/3 right-1/4 -mb-24 w-80 h-80 bg-rose-500/10 dark:bg-rose-500/5 blur-3xl rounded-full -z-10" />
+      <div className="absolute top-0 left-1/4 -mt-24 w-96 h-96 bg-primary/10 dark:bg-primary/5 blur-3xl rounded-full z-0" />
+      <div className="absolute bottom-1/3 right-1/4 -mb-24 w-80 h-80 bg-rose-500/10 dark:bg-rose-500/5 blur-3xl rounded-full z-0" />
 
       {/* Decorative floating icons */}
-      <div className="absolute top-20 left-10 md:left-20 text-black dark:text-white opacity-5 dark:opacity-10 -rotate-12 -z-10 pointer-events-none select-none">
+      <div className="absolute top-20 left-10 md:left-20 text-black dark:text-white opacity-10 -rotate-12 z-0 pointer-events-none select-none">
         <PawPrint className="w-48 h-48 md:w-80 md:h-80" />
       </div>
-      <div className="absolute top-64 right-5 md:right-20 text-black dark:text-white opacity-5 dark:opacity-10 rotate-12 -z-10 pointer-events-none select-none">
+      <div className="absolute top-64 right-5 md:right-20 text-black dark:text-white opacity-10 rotate-12 z-0 pointer-events-none select-none">
         <Heart className="w-32 h-32 md:w-64 md:h-64" />
       </div>
-      <div className="absolute bottom-40 left-1/4 text-black dark:text-white opacity-5 dark:opacity-10 rotate-45 -z-10 pointer-events-none select-none">
+      <div className="absolute bottom-40 left-1/4 text-black dark:text-white opacity-10 rotate-45 z-0 pointer-events-none select-none">
         <PawPrint className="w-40 h-40 md:w-72 md:h-72" />
       </div>
 
