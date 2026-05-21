@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PawPrint, MessageCircle, Hash, Globe, Mail, Phone, MapPin } from "lucide-react";
+import { PawPrint, MessageCircle, Globe, Mail, Phone, MapPin, Facebook, Linkedin } from "lucide-react";
 
 export function Footer() {
   return (
@@ -20,13 +20,16 @@ export function Footer() {
               Connecting loving families with animals in need. We believe every pet deserves a safe, happy, and forever home.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-zinc-400 hover:text-primary transition-colors">
-                <Globe className="w-5 h-5" />
+              <a href="#" className="text-zinc-400 hover:text-blue-600 transition-colors" title="Facebook">
+                <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="text-zinc-400 hover:text-primary transition-colors">
-                <Hash className="w-5 h-5" />
+              <a href="#" className="text-zinc-400 hover:text-blue-500 transition-colors" title="LinkedIn">
+                <Linkedin className="w-5 h-5" />
               </a>
-              <a href="#" className="text-zinc-400 hover:text-primary transition-colors">
+              <a href="#" className="text-zinc-400 hover:text-red-500 transition-colors" title="Email">
+                <Mail className="w-5 h-5" />
+              </a>
+              <a href="#" className="text-zinc-400 hover:text-green-500 transition-colors" title="WhatsApp">
                 <MessageCircle className="w-5 h-5" />
               </a>
             </div>
@@ -101,7 +104,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="pt-8 border-t border-zinc-200 dark:border-zinc-700 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             &copy; {new Date().getFullYear()} PetHaven Adoption Platform. All rights reserved.
           </p>
